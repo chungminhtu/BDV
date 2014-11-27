@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <title>jVectorMap demo</title>
+  
+  
+  <link rel="stylesheet" media="all" href="css/jquery-jvectormap-2.0.1.css"/>
+  
+  
+  <script src="js/jquery-1.11.1.min.js"></script> 
+  <script src="js/jquery-jvectormap-2.0.1.min.js"></script> 
+
+  <script src="maps/vn/jquery-jvectormap-data-vn-quevo-en.js"></script>
+  <script src="js/html2canvas.js"></script>
+  <script src="js/jquery.plugin.html2canvas.js"></script>
+  <script>
+    var cdata = {"viethongx": "35", "daixuanx": "15", "nhanhoax": "17", "phuonglieux": "20", "phuongmaox": "10", "yengiax": "21","hanquangx": "35", "chilangx": "15", "modaox": "17", "banganx": "24", "quetanx": "10", "phomoitt": "28","bonglaix": "10", "viethungx": "20","cachbix": "39", "chilangx": "15", "phuluongx": "17", "daovienx": "20", "phulangx": "19", "ngocxax": "113"}
+function chkValue(val){
+    if (typeof val ==="undefined"){
+      x = "Chưa có";
+    }
+    else {
+      x = val;
+    }
+    return x;
+};
+ 
+	$(function(){
+  //Search through the DOM to find the element
+  //with CSS class name "map1" and select it;
+  //then execute the vectorMap method for this
+  //object
+  $('.map1').vectorMap({
+    //set the map property to the specific map
+    //to be displayed
+    map: 'vn_quevo',
+	series: {
+     //this is the object for passing country/region data into
+     regions: [{
+       //define the range of color values
+       scale: ['#BFEFFF', '#0000D9'],
+       //define the function that maps data to color range
+	   legend: {
+          vertical: false
+        },
+       normalizeFunction: 'linear',
+       //define the coloration method
+       attribute: 'fill', 
+       //define the array of country data
+       values: cdata
+     }]
+   },
+   onRegionTipShow: function(event, label, code){
+       label.html(label.html()  +': '+ chkValue(cdata[code]));
+     },
+	 labels: {
+      regions: {
+        render: function(code){
+          return chkValue(cdata[code]);
+		  }
+        } 
+	 },
+	 
+  });
+});
+$(window).ready(function(){ 
+    $('#btnSave').click(function(){
+   html2canvas(document.body, {
+   onrendered: function(canvas) {
+   document.body.appendChild(canvas);
+     //var img = canvas.get(0).toDataURL("image/jpg");
+  //  window.location.href = img;
+ }
+            }); 
+    });
+});
+
+  </script>
+</head>
+<body>
+<input type="submit" value="Take Screenshot Of Div" id="btnSave"/>
+<div class="map1" style="width: 800px; height: 550px"></div>
+</body>
+</html>
